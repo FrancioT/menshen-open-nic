@@ -21,7 +21,7 @@ if {$num_qdma > 1} {
 
 # Menshen TCL
 
-source ./tcl/fifo.tcl
+source ./fifo.tcl
 
 #Add Parser Action RAM IP
 create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name parse_act_ram_ip
