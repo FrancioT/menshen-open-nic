@@ -19,6 +19,6 @@ if {$num_qdma > 1} {
     source box_250mhz/box_250mhz_axis_switch.tcl
 }
 
-source menshen/tcl/opennic_integration.tcl
+source ../menshen/tcl/opennic_integration.tcl
 
 read_verilog -quiet -sv p2p_250mhz.sv
