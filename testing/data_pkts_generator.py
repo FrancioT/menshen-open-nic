@@ -25,9 +25,9 @@ def big_endian(hex_value):
 
 # GENERATED TEST PACKETS
 print()
-test_pkt = gen_data_pkt("0026000000030000000200000000"+4*"00", 15)
-res_pkt  = gen_data_pkt("0026000000030000000200000001"+4*"00", 15)
-#test_pkt.show()
+test_pkt = gen_data_pkt("001a000000030000000200000000"+4*"00", 0x1)
+res_pkt  = gen_data_pkt("001a000000030000000200000001"+4*"00", 0x1)
+test_pkt.show()
 print("Input: ")
 print(big_endian(bytearray(hexlify(bytes(test_pkt)))))
 print("Output: ")

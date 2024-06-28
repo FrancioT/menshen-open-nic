@@ -10,6 +10,7 @@ def convert_bstr_to_hstr(bstr):
 
 def gen_ctrl_pkt(module_info, data):
     raw_load = bytes.fromhex(module_info)
+    raw_load = raw_load + bytes(15)      # padding + cookie
     raw_load = raw_load + bytes.fromhex(data)
     pkt = Ether(src='00:01:02:03:04:05', dst='06:07:08:09:0a:0b')/Dot1Q(vlan=0xf) \
                 /IP(src='111.111.111.111', dst='222.222.222.222')/UDP(sport=1234, dport=0xf1f2) \
@@ -95,7 +96,7 @@ sys.stdout = open("vivado_format.txt",'w')
 
 # CONFIGURATION PACKETS
 output_to_file("p4_generated/conf1.txt")
-output_to_file("p4_generated/confsys.txt")
+#output_to_file("p4_generated/confsys.txt")
 output_to_file("p4_generated/stateconf.txt")
 
 
