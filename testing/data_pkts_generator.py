@@ -12,7 +12,16 @@ def gen_data_pkt(data, vid):
                 /Raw(load=bytes.fromhex(used_data))
     return pkt
 
-
+def big_endian(hex_value):
+     return_val = bytearray(0)
+     i=0
+     while i+2 < len(hex_value):
+        return_val[0:0] = hex_value[i:i+2]
+        i += 2
+     return_val[0:0] = hex_value[i:]
+     if len(hex_value) != len(return_val):
+     	raise Exception("Error during change in endianness!")
+     return return_val
 
 # GENERATED TEST PACKETS
 print()
@@ -20,6 +29,6 @@ test_pkt = gen_data_pkt("0026000000030000000200000000"+4*"00", 15)
 res_pkt  = gen_data_pkt("0026000000030000000200000001"+4*"00", 15)
 #test_pkt.show()
 print("Input: ")
-print(bytearray(hexlify(bytes(test_pkt))))
+print(big_endian(bytearray(hexlify(bytes(test_pkt)))))
 print("Output: ")
-print(bytearray(hexlify(bytes(res_pkt))))
+print(big_endian(bytearray(hexlify(bytes(res_pkt)))))
