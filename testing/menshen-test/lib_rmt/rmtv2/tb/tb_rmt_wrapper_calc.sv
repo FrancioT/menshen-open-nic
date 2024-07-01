@@ -32,7 +32,7 @@ wire [C_S_AXIS_TUSER_WIDTH-1:0]		    m_axis_tuser;
 wire								    m_axis_tvalid;
 reg										m_axis_tready;
 wire									m_axis_tlast;
-
+reg                                     finished_config;
 
 //clk signal
 localparam CYCLE = 10;
@@ -43,6 +43,7 @@ end
 
 //reset signal
 initial begin
+    finished_config = 0;
     clk = 0;
     aresetn = 1;
     #(10);
