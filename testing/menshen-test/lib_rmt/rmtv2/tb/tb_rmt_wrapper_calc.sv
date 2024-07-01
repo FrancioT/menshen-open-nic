@@ -242,6 +242,26 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(10000*CYCLE);
+    finished_config <= 1;
+    #(10*CYCLE);
+    if (value_detected) begin
+        $display("Test passed");
+    end else begin
+        $display("Test failed");
+        $display(s_axis_tdata);
+    end
+end
+
+// Output validation
+// Define the target value you are looking for
+localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE = 512'h000000000000000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000001;
+
+always_ff @(posedge clk or negedge aresetn) begin
+    if (!rst_n) begin
+        value_detected <= 0;
+    end else if (finished_config && m_axis_tdata == TARGET_VALUE) begin
+        value_detected <= 1;
+    end
 end
 
 
