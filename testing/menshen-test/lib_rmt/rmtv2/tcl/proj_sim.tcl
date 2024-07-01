@@ -134,7 +134,7 @@ update_compile_order -fileset sources_1
 set_property -name {xsim.simulate.runtime} -value {10000ns} -objects [get_filesets sim_1]
 
 launch_simulation -simset sim_1 -mode behavioral
-run 10us
+run 500us
 
 
 
