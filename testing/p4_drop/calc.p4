@@ -125,7 +125,9 @@ struct headers {
  */
  
 struct metadata {
-    /* In our case it is empty */
+    bit<128>  nothing;
+    bit<1>    discard;
+    bit<127>  still_nothing;
 }
 
 /*************************************************************************
@@ -173,8 +175,8 @@ control MyIngress(inout headers hdr,
         hdr.p4calc.res = hdr.p4calc.operand_a + hdr.p4calc.operand_b;
     }
     
-    action operation_sub() {
-        hdr.p4calc.res = hdr.p4calc.operand_a - hdr.p4calc.operand_b;
+    action drop_pkt() {
+        meta.discard = 1;
     }
     
     table calculate {
@@ -183,12 +185,12 @@ control MyIngress(inout headers hdr,
         }
         actions = {
             operation_add;
-            operation_sub;
+            drop_pkt;
         }
         const default_action = operation_add();
         const entries = {
             13: operation_add();
-			26: operation_sub();
+            26: drop_pkt();
         }
     }
 
