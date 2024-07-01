@@ -32,3 +32,6 @@ print("Input: ")
 print(big_endian(bytearray(hexlify(bytes(test_pkt)))))
 print("Output: ")
 print(big_endian(bytearray(hexlify(bytes(res_pkt)))))
+
+# FOR MULTISTAGE TEST: operation +, res = 28, op_a = 10, op_b = 5
+# test_pkt = gen_data_pkt("000d0000000a0000000500000028"+4*"00", 0x1)
