@@ -106,7 +106,8 @@ read_verilog "./lookup/lookup_engine_top.v"
 read_verilog "./lookup/lke_cam_part.v"
 read_verilog "./lookup/lke_ram_part.v"
 ###
-read_verilog "./tb/tb_rmt_wrapper.v"
+read_verilog "./tb/tb_rmt_wrapper_calc.sv"
+read_verilog "./tb/tb_rmt_wrapper_drop.sv"
 
 
 update_compile_order -fileset sources_1

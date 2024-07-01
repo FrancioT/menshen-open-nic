@@ -1,7 +1,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_rmt_wrapper #(
+module tb_rmt_wrapper_calc #(
     // Slave AXI parameters
 	parameter C_S_AXI_DATA_WIDTH = 32,
 	parameter C_S_AXI_ADDR_WIDTH = 12,
