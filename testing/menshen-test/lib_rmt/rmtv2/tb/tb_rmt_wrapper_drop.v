@@ -244,6 +244,19 @@ initial begin
 end
 
 
+// Output validation
+sequence no_output;
+    s_axis_tvalid ##1 (m_axis_tvalid == 0) throughout (!s_axis_tvalid);
+endsequence
+
+
+property no_output_sim;
+    @(posedge clk) no_output;
+endproperty
+
+assert property (no_output_sim) else $fatal("The module tries to write an output, it should discard everything!");
+
+
 rmt_wrapper #(
 	.C_S_AXI_DATA_WIDTH(),
 	.C_S_AXI_ADDR_WIDTH(),
