@@ -108,7 +108,7 @@ read_verilog "./lookup/lke_ram_part.v"
 ###
 read_verilog "./tb/tb_rmt_wrapper_calc.sv"
 read_verilog "./tb/tb_rmt_wrapper_drop.sv"
-
+read_verilog "./tb/tb_rmt_wrapper_calc_dep.v"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
