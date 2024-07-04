@@ -1,8 +1,7 @@
 
 `timescale 1ns / 1ps
 
-// This is the unit test for the ADD operation
-module tb_rmt_wrapper_calc_add #(
+module tb_rmt_wrapper_if_else #(
     // Slave AXI parameters
 	parameter C_S_AXI_DATA_WIDTH = 32,
 	parameter C_S_AXI_ADDR_WIDTH = 12,
@@ -33,8 +32,7 @@ wire [C_S_AXIS_TUSER_WIDTH-1:0]		    m_axis_tuser;
 wire								    m_axis_tvalid;
 reg										m_axis_tready;
 wire									m_axis_tlast;
-reg                                     finished_config;
-reg                                     value_detected;
+
 
 //clk signal
 localparam CYCLE = 10;
@@ -45,7 +43,6 @@ end
 
 //reset signal
 initial begin
-    finished_config = 0;
     clk = 0;
     aresetn = 1;
     #(10);
@@ -53,7 +50,6 @@ initial begin
     #(10);
     aresetn = 1;
 end
-
 
 initial begin
     #(3*CYCLE+CYCLE/2);
@@ -66,12 +62,12 @@ initial begin
     s_axis_tlast <= 1'b0;
     #(3*CYCLE)
     // conf1.txt:
-    s_axis_tdata <= 512'h000000000000000000000000000000010000902f2e00f2f1d204dededede6f6f6f6f0ede1140000001004200004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h00000000000000000000000000000001000048482e00f2f1d204dededede6f6f6f6f0ede1140000001004200004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000270e250d230c910ba108;
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000250e230ca108;
     s_axis_tkeep <= 64'h00000000000fffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -79,12 +75,12 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(30*CYCLE)
-    s_axis_tdata <= 512'h000000000000000000000000000000010005902a2e00f2f1d204dededede6f6f6f6f0ede1140000001004200004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h00000000000000000000000000000001000548432e00f2f1d204dededede6f6f6f6f0ede1140000001004200004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000270e250d230c910ba108;
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000250e230ca108;
     s_axis_tkeep <= 64'h00000000000fffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -92,12 +88,12 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(30*CYCLE)
-    s_axis_tdata <= 512'h0000000000000000000000000000000100014f5e1f00f2f1d204dededede6f6f6f6f1dde1140000001003300004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h0000000000000000000000000000000100014f5d1f00f2f1d204dededede6f6f6f6f1dde1140000001003300004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0000;
+    s_axis_tdata <= 512'h000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0001;
     s_axis_tkeep <= 64'h000000000000001f;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -110,7 +106,7 @@ initial begin
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000080ffff0000ffffffffffffffffffffffffffffffffffffffff;
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000080ffffffffffffffff00000000ffffffffffffffffffffffff;
     s_axis_tkeep <= 64'h0000000001ffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -118,12 +114,12 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(30*CYCLE)
-    s_axis_tdata <= 512'h00000000000000000000000000000000000275683400f2f1d204dededede6f6f6f6f08de1140000001004800004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h000000000000000000000000000000000002056a3400f2f1d204dededede6f6f6f6f08de1140000001004800004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000a00100000000000000000000000000000000000000001000;
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000;
     s_axis_tkeep <= 64'h0000000003ffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -131,12 +127,12 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(30*CYCLE)
-    s_axis_tdata <= 512'h000000000000000000000000000000000f02e83c6900f2f1d204dededede6f6f6f6fd3dd1140000001007d00004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h000000000000000000000000000000000f024bc86900f2f1d204dededede6f6f6f6fd3dd1140000001007d00004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h000f00001e00003c0000780000f00000e00100c003008007808c0200001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f0;
+    s_axis_tdata <= 512'h000f00001e00003c0000780000f00000e00100c09301000700000f00001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f0;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
@@ -149,12 +145,12 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(30*CYCLE)
-    s_axis_tdata <= 512'h00000000000000000000000000000001000245683400f2f1d204dededede6f6f6f6f08de1140000001004800004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h00000000000000000000000000000001000215693400f2f1d204dededede6f6f6f6f08de1140000001004800004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000d00000000000000000000000000000000000000000001000;
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000;
     s_axis_tkeep <= 64'h0000000003ffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -162,12 +158,100 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(30*CYCLE)
-    s_axis_tdata <= 512'h000000000000000000000000000000010f02e93b6900f2f1d204dededede6f6f6f6fd3dd1140000001007d00004500080f0000810504030201000b0a09080706;
+    s_axis_tdata <= 512'h000000000000000000000000000000010f027bc06900f2f1d204dededede6f6f6f6fd3dd1140000001007d00004500080f0000810504030201000b0a09080706;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
     #(CYCLE)
-    s_axis_tdata <= 512'h000f00001e00003c0000780000f00000e00100c003008007808c0100001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f0;
+    s_axis_tdata <= 512'h000f00001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f0;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008d00000e00100c00300800700;
+    s_axis_tkeep <= 64'h0000000000007fff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(30*CYCLE)
+    s_axis_tdata <= 512'h0000000000000000000000000000000100094f551f00f2f1d204dededede6f6f6f6f1dde1140000001003300004500080f0000810504030201000b0a09080706;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0001;
+    s_axis_tkeep <= 64'h000000000000001f;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(30*CYCLE)
+    s_axis_tdata <= 512'h000000000000000000000000000000010f0917e23300f2f1d204dededede6f6f6f6f09de1140000001004700004500080f0000810504030201000b0a09080706;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000080ffffffffffffffff00000000ffffffffffffffffffffffff;
+    s_axis_tkeep <= 64'h0000000001ffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(30*CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000000000a15623400f2f1d204dededede6f6f6f6f08de1140000001004800004500080f0000810504030201000b0a09080706;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000;
+    s_axis_tkeep <= 64'h0000000003ffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(30*CYCLE)
+    s_axis_tdata <= 512'h000000000000000000000000000000000f0a7bb96900f2f1d204dededede6f6f6f6fd3dd1140000001007d00004500080f0000810504030201000b0a09080706;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h000f00001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f0;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008d00000e00100c00300800700;
+    s_axis_tkeep <= 64'h0000000000007fff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(30*CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000001000a05613400f2f1d204dededede6f6f6f6f08de1140000001004800004500080f0000810504030201000b0a09080706;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000;
+    s_axis_tkeep <= 64'h0000000003ffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(30*CYCLE)
+    s_axis_tdata <= 512'h000000000000000000000000000000010f0a47bf6900f2f1d204dededede6f6f6f6fd3dd1140000001007d00004500080f0000810504030201000b0a09080706;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b0;
+    #(CYCLE)
+    s_axis_tdata <= 512'h000f00001e00003c0000780000f00000e00100c09701000700000f00001e00003c0000780000f00000e00100c00300800700000f00001e00003c0000780000f0;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b0;
@@ -237,38 +321,17 @@ initial begin
     #(30*CYCLE)
     
     
-    finished_config <= 1;
-    // input data
-    s_axis_tdata <= 512'h000000000000000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+    
+    s_axis_tdata <= 512'h000000000100000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
     #CYCLE
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    #(10000*CYCLE);
-    if (value_detected) begin
-        $display("Test passed");
-    end else begin
-        $display("Test failed");
-        $display(s_axis_tdata);
-    end
-    $finish(0);
+    #(1000*CYCLE);
+    // risultato atteso: 000000006400000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000
 end
-
-// Output validation
-// Define the target value you are looking for
-localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE = 512'h000000000500000002000000030000000d00544d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
-
-always_ff @(posedge clk) begin
-    if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE) begin
-        value_detected <= 1;
-    end
-    else begin
-        value_detected <= aresetn & value_detected;
-    end
-end
-
 
 rmt_wrapper #(
 	.C_S_AXI_DATA_WIDTH(),
