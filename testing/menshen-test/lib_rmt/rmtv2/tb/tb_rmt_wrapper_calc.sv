@@ -241,7 +241,7 @@ initial begin
     s_axis_tdata <= 512'h000000000000000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
-    s_axis_tlast <= 1'b1;
+    s_axis_tlast <= 1'b0;
     #CYCLE
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
@@ -250,7 +250,7 @@ initial begin
         $display("SUB Test passed");
     end else begin
         $display("SUB Test failed");
-        $display(s_axis_tdata);
+        $display("%h", m_axis_tdata);
         $finish(0);
     end
     s_axis_tdata <= 512'h000000000000000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
@@ -265,7 +265,7 @@ initial begin
         $display("ADD Test passed");
     end else begin
         $display("ADD Test failed");
-        $display(s_axis_tdata);
+        $display("%h", m_axis_tdata);
         $finish(0);
     end
     $finish(0);
