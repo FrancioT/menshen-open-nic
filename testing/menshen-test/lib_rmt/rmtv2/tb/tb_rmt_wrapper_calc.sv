@@ -33,7 +33,8 @@ wire								    m_axis_tvalid;
 reg										m_axis_tready;
 wire									m_axis_tlast;
 reg                                     finished_config;
-reg                                     value_detected;
+reg                                     value_detected_add;
+reg                                     value_detected_sub;
 
 //clk signal
 localparam CYCLE = 10;
@@ -245,25 +246,56 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     #(10000*CYCLE);
-    if (value_detected) begin
-        $display("Test passed");
+    if (value_detected_sub) begin
+        $display("SUB Test passed");
     end else begin
-        $display("Test failed");
+        $display("SUB Test failed");
         $display(s_axis_tdata);
+        $finish(0);
+    end
+    s_axis_tdata <= 512'h000000000000000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    #CYCLE
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    #(10000*CYCLE);
+    if (value_detected_add) begin
+        $display("ADD Test passed");
+    end else begin
+        $display("ADD Test failed");
+        $display(s_axis_tdata);
+        $finish(0);
     end
     $finish(0);
 end
 
 // Output validation
 // Define the target value you are looking for
-localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE = 512'h000000000100000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+// SUB EXPECTED OUTPUT
+localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE_SUB = 512'h000000000100000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+// ADD EXPECTED OUTPUT
+localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE_ADD = 512'h000000000500000002000000030000000d00544d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
 
+
+// LOGIC TO CHECK IF THE SUB TARGET VALUE IS DETECTED
 always_ff @(posedge clk) begin
-    if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE) begin
-        value_detected <= 1;
+    if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE_SUB) begin
+        value_detected_sub <= 1;
     end
     else begin
-        value_detected <= aresetn & value_detected;
+        value_detected_sub <= aresetn & value_detected_sub;
+    end
+end
+
+// LOGIC TO CHECK IF THE ADD TARGET VALUE IS DETECTED
+always_ff @(posedge clk) begin
+    if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE_ADD) begin
+        value_detected_add <= 1;
+    end
+    else begin
+        value_detected_add <= aresetn & value_detected_add;
     end
 end
 
