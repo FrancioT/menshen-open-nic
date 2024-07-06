@@ -1,7 +1,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_rmt_wrapper_dep #(
+module tb_rmt_wrapper_stages #(
     // Slave AXI parameters
 	parameter C_S_AXI_DATA_WIDTH = 32,
 	parameter C_S_AXI_ADDR_WIDTH = 12,
@@ -1036,6 +1036,7 @@ initial begin
     // op_a   : a0000000 = 10
     // op_b   : 50000000 = 5
     // op     : 1a00 = - / 0d00 = +
+    //s_axis_tdata <= 512'h0000000026000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;	
     s_axis_tdata <= 512'h0000000028000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;	
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
@@ -1043,7 +1044,11 @@ initial begin
     #CYCLE
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    #(10000*CYCLE);
+    
+    // Check result
+	@(m_axis_tvalid == 1'b1)
+	assert (m_axis_tdata[479:472] == 8'h46) $display ("TEST PASSED");
+	$finish;
 end
 
 
