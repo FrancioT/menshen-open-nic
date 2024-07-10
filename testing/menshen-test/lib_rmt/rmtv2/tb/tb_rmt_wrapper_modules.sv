@@ -16,6 +16,13 @@ module tb_rmt_wrapper_modules #(
 	parameter PHV_ADDR_WIDTH = 4
 )();
 
+// Output validation
+// Define the target value you are looking for
+// SUB EXPECTED OUTPUT
+localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE_SUB = 512'h000000000100000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+// ADD EXPECTED OUTPUT
+localparam logic [C_S_AXIS_DATA_WIDTH-1:0] TARGET_VALUE_ADD = 512'h000000000500000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+
 reg                                 clk;
 reg                                 aresetn;
 
@@ -832,8 +839,13 @@ initial begin
     #CYCLE
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    #(1000*CYCLE);
-    
+    @(m_axis_tvalid == 1'b1)
+	if (m_axis_tdata == TARGET_VALUE_SUB) begin 
+        $display ("SUB TEST PASSED"); 
+    end else begin
+        $display ("SUB TEST FAILED");
+    end
+    #(100*CYCLE);
     s_axis_tdata <= 512'h000000000000000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
@@ -841,7 +853,14 @@ initial begin
     #CYCLE
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    #(1000*CYCLE);
+    @(m_axis_tvalid == 1'b1)
+	if (m_axis_tdata == TARGET_VALUE_ADD) begin 
+        $display ("ADD TEST PASSED"); 
+    end else begin
+        $display ("ADD TEST FAILED");
+    end
+    #(100*CYCLE);
+    $finish(0);
 end
 
 
