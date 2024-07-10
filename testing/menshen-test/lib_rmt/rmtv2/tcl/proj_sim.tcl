@@ -110,6 +110,7 @@ read_verilog "./tb/tb_rmt_wrapper_calc.sv"
 read_verilog "./tb/tb_rmt_wrapper_drop.sv"
 read_verilog "./tb/tb_rmt_wrapper_stages.sv"
 read_verilog "./tb/tb_rmt_wrapper_if_else.sv"
+read_verilog "./tb/tb_rmt_wrapper_modules.sv"
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
