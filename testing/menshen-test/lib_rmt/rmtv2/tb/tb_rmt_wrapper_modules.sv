@@ -39,9 +39,6 @@ wire [C_S_AXIS_TUSER_WIDTH-1:0]		    m_axis_tuser;
 wire								    m_axis_tvalid;
 reg										m_axis_tready;
 wire									m_axis_tlast;
-reg                                     finished_config;
-reg                                     value_detected_add;
-reg                                     value_detected_sub;
 
 //clk signal
 localparam CYCLE = 10;
@@ -52,7 +49,6 @@ end
 
 //reset signal
 initial begin
-    finished_config = 0;
     clk = 0;
     aresetn = 1;
     #(10);
@@ -830,8 +826,7 @@ initial begin
     #(100*CYCLE)
     
     
-    
-    finished_config <= 1;
+    // TEST SUB    
     s_axis_tdata <= 512'h000000000000000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
@@ -840,12 +835,14 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     @(m_axis_tvalid == 1'b1)
+    #(CYCLE/2)
 	if (m_axis_tdata == TARGET_VALUE_SUB) begin 
         $display ("SUB TEST PASSED"); 
     end else begin
         $display ("SUB TEST FAILED");
     end
     #(100*CYCLE);
+    // TEST ADD
     s_axis_tdata <= 512'h000000000000000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
     s_axis_tkeep <= 64'hffffffffffffffff;
     s_axis_tvalid <= 1'b1;
@@ -854,6 +851,7 @@ initial begin
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     @(m_axis_tvalid == 1'b1)
+    #(CYCLE/2)
 	if (m_axis_tdata == TARGET_VALUE_ADD) begin 
         $display ("ADD TEST PASSED"); 
     end else begin
