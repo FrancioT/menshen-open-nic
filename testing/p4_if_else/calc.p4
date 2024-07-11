@@ -1,33 +1,3 @@
-/* -*- P4_16 -*- */
-
-/*
- * P4 Calculator
- *
- * This program implements a simple protocol. It can be carried over Ethernet
- * (Ethertype 0x1234).
- *
- * The Protocol header looks like this:
- *
- *        0                1                  2              3
- * +----------------+----------------+----------------+---------------+
- * |      P         |       4        |     Version    |     Op        |
- * +----------------+----------------+----------------+---------------+
- * |                              Operand A                           |
- * +----------------+----------------+----------------+---------------+
- * |                              Operand B                           |
- * +----------------+----------------+----------------+---------------+
- * |                              Result                              |
- * +----------------+----------------+----------------+---------------+
- *
- *
- * The device receives a packet, performs the requested operation, fills in the 
- * result and sends the packet back out of the same port it came in on, while 
- * swapping the source and destination addresses.
- *
- * If an unknown operation is specified or the header is not valid, the packet
- * is dropped 
- */
-
 #include <core.p4>
 #include <fpga.p4>
 
