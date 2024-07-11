@@ -41,6 +41,7 @@ wire [C_S_AXIS_TUSER_WIDTH-1:0]		    m_axis_tuser;
 wire								    m_axis_tvalid;
 reg										m_axis_tready;
 wire									m_axis_tlast;
+reg                                     finished_config;
 
 //clk signal
 localparam CYCLE = 10;
@@ -51,6 +52,7 @@ end
 
 //reset signal
 initial begin
+    finished_config <= 1'b0;
     clk = 0;
     aresetn = 1;
     #(10);
@@ -884,11 +886,18 @@ initial begin
     #CYCLE
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
+    #(4*CYCLE)
+    finished_config <= 1'b1;
     #(10000*CYCLE);
     
     $finish(0);
 end
 
+property no_output_sim;
+    @(posedge clk) finished_config |-> !m_axis_tvalid;
+endproperty
+
+assert property (no_output_sim) else $fatal("The module tries to write an output, it should discard everything!");
 
 rmt_wrapper #(
 	.C_S_AXI_DATA_WIDTH(),
