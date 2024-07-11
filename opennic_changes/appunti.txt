@@ -1,0 +1,55 @@
+modifiche fatte:
+- modificato il file cms_subsystem.sv
+- modificato il file open_nic_shell.sv
+- modificato il file system_config.sv
+
+
+cms_subsystem.sv diff:
+37,40d36
+<     hbm_temp_1_0,
+<     hbm_temp_2_0,
+<     interrupt_hbm_cattrip_0,
+<    /* 
+69c65
+< `endif*/
+---
+> `endif
+75,79c71
+<     input [6:0]hbm_temp_1_0;
+<     input [6:0]hbm_temp_2_0;
+<     (* X_INTERFACE_INFO = "xilinx.com:signal:interrupt:1.0 INTR.INTERRUPT_HBM_CATTRIP_0 INTERRUPT" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME INTR.INTERRUPT_HBM_CATTRIP_0, PortWidth 1, SENSITIVITY LEVEL_HIGH" *) input [0:0]interrupt_hbm_cattrip_0;
+<     (* X_INTERFACE_INFO = "xilinx.com:signal:interrupt:1.0 INTR.SATELLITE_GPIO_0 INTERRUPT" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME INTR.SATELLITE_GPIO_0, PortWidth 4, SENSITIVITY EDGE_RISING" *) input [3:0]satellite_gpio_0;
+<   /*`ifdef __au280__
+---
+>   `ifdef __au280__
+115c107
+<   `endif*/  
+---
+>   `endif
+
+
+
+open_nic_shell.sv:
+98,102d97
+<   input     [16*NUM_QDMA-1:0] pcie_rxp,
+<   input     [16*NUM_QDMA-1:0] pcie_rxn,
+<   output    [16*NUM_QDMA-1:0] pcie_txp,
+<   output    [16*NUM_QDMA-1:0] pcie_txn,
+<
+
+
+
+system_config.sv:
+134c134
+< /*`ifdef __au280__
+---
+> `ifdef __au280__
+170,175c170
+< `endif*/
+<   input                   [3:0] satellite_gpio_0,
+<   input                   [6:0] hbm_temp_1_0,
+<   input                   [6:0] hbm_temp_2_0,
+<   input                         interrupt_hbm_cattrip_0, 
+<   
+---
+> `endif
