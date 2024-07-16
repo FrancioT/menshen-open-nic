@@ -455,4 +455,4 @@ if {$post_impl} {
 add_files -norecurse {${plugin_dir}/p2p/box_250mhz/user_plugin_250mhz_inst.vh ${plugin_dir}/p2p/box_322mhz/box_322mhz_address_map_inst.vh ${plugin_dir}/p2p/box_322mhz/user_plugin_322mhz_inst.vh ${plugin_dir}/p2p/box_250mhz/box_250mhz_address_map_inst.vh}
 update_compile_order -fileset sources_1
 
-set_property is_global_include true [get_files  /work1TB/ftranquillo_work/open-nic-shell/src/open_nic_shell_macros.vh]
+set_property is_global_include true [get_files  ${src_dir}/open_nic_shell_macros.vh]
