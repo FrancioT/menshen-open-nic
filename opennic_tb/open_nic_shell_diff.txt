@@ -1,0 +1,5 @@
+97a98,99
+>   output          [NUM_QDMA-1:0] axis_aclk,
+>   
+431d432
+<   wire          [NUM_QDMA-1:0] axis_aclk;
