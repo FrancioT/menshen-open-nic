@@ -1,5 +1,6 @@
 import sys
 from binascii import hexlify
+from crc import Calculator, Crc32
 from scapy.all import *
 from ctypes import *
 
@@ -78,20 +79,22 @@ def output_to_file(file_name):
 			if i!=for_range-1:
 				print("    s_axis_tuser_mty <= 6'b000000;")
 				print("    s_axis_tlast <= 1\'b0;")
-				print("    @(clk == 1'b0)\n    @(clk == 1'b1)")
+				print("    @(clk == 1'b0);\n    @(clk == 1'b1);")
 			else:
-				print("    s_axis_tuser_mty <= 6'b"+format(64-((len(changed)//2)%64), "08b")+";")
+				print("    s_axis_tuser_mty <= 6'b"+format(64-((len(changed)//2)%64), "08b")+";")      # forse serve fare la conversione bin endian e little endian anche di questi 2?
 				print("    s_axis_tlast <= 1\'b1;")
-				print("    @(clk == 1'b0)\n    @(clk == 1'b1)")
+				print("    @(clk == 1'b0);\n    @(clk == 1'b1);")
 				print("    s_axis_tvalid <= 1\'b0;")
 				print("    s_axis_tlast <= 1\'b0;")
-				print("    repeat(30)\n    begin\n        @(clk == 1'b0)\n        @(clk == 1'b1)\n    end")
+				print("    s_axis_tcrc <= 1\'b"+format(crc_calc.checksum(bytes(chunk)), "032b")+";")   # forse serve fare la conversione bin endian e little endian anche di questi 2?
+				print("    repeat(30)\n    begin\n        @(clk == 1'b0);\n        @(clk == 1'b1);\n    end")
 	print("\n")
 
 
 
 
 sys.stdout = open("vivado_format.txt",'w')
+crc_calc = Calculator(Crc32.CRC32)
 
 # CONFIGURATION PACKETS
 output_to_file("p4_generated/conf1.txt")
