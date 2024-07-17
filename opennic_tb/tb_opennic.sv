@@ -8,7 +8,7 @@ reg                         aresetn;
 
 reg [512-1:0]               s_axis_tdata;
 reg [5:0]                   s_axis_tuser_mty;
-reg [C_S_AXIS_TUSER_WIDTH-1:0]		s_axis_tuser;
+reg [32-1:0]		s_axis_tuser;
 reg                         s_axis_tvalid;
 wire                        s_axis_tready;
 reg                         s_axis_tlast;
@@ -58,9 +58,7 @@ initial begin
     end
     s_axis_tcrc <= 32'b0;
     m_axis_tready <= 1'b1;
-    s_axis_tdata <= 512'b0; 
-    s_axis_tkeep <= 64'h0;
-    s_axis_tuser <= 128'h0;
+    s_axis_tuser <= 32'h0;
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
     repeat(3)
@@ -329,7 +327,7 @@ initial begin
     
     finished_config <= 1;
     s_axis_tdata <= 512'h000000000000000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
-    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tuser_mty <= 6'b000000;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
     @(clk == 1'b0);
@@ -356,7 +354,7 @@ initial begin
         @(clk == 1'b1);
     end
     s_axis_tdata <= 512'h000000000000000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
-    s_axis_tkeep <= 64'hffffffffffffffff;
+    s_axis_tuser_mty <= 6'b000000;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
     @(clk == 1'b0);
