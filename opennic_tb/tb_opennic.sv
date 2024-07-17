@@ -432,7 +432,7 @@ open_nic_shell_ins
 	.m_axis_cmac_tx_sim_tvalid(m_axis_tvalid),
 	.m_axis_cmac_tx_sim_tuser_err(m_axis_tuser),
 	.m_axis_cmac_tx_sim_tready(m_axis_tready),
-	.m_axis_cmac_tx_sim_tlast(m_axis_tlast)
+	.m_axis_cmac_tx_sim_tlast(m_axis_tlast),
 	
 	.axis_aclk(clk)	
 );
