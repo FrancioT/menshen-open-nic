@@ -350,7 +350,7 @@ localparam logic [512-1:0] TARGET_VALUE_ADD = 512'h00000000050000000200000003000
 
 
 // LOGIC TO CHECK IF THE SUB TARGET VALUE IS DETECTED
-always_ff @(posedge clk) begin
+always_ff @(negedge clk) begin
     if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE_SUB) begin
         value_detected_sub <= 1;
     end
@@ -360,7 +360,7 @@ always_ff @(posedge clk) begin
 end
 
 // LOGIC TO CHECK IF THE ADD TARGET VALUE IS DETECTED
-always_ff @(posedge clk) begin
+always_ff @(negedge clk) begin
     if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE_ADD) begin
         value_detected_add <= 1;
     end
@@ -393,18 +393,12 @@ open_nic_shell_ins
 	.s_axis_qdma_h2c_sim_tcrc(s_axis_tcrc),
 
 	// output Master AXI Stream
-	/*.m_axis_cmac_tx_sim_tdata(m_axis_tdata),
+	.m_axis_cmac_tx_sim_tdata(m_axis_tdata),
 	.m_axis_cmac_tx_sim_tkeep(m_axis_tkeep),
 	.m_axis_cmac_tx_sim_tvalid(m_axis_tvalid),
 	.m_axis_cmac_tx_sim_tuser_err(m_axis_tuser),
 	.m_axis_cmac_tx_sim_tready(m_axis_tready),
-	.m_axis_cmac_tx_sim_tlast(m_axis_tlast),*/
-	.axis_adap_tx_250mhz_tdata(m_axis_tdata),
-	.axis_adap_tx_250mhz_tkeep(m_axis_tkeep),
-	.axis_adap_tx_250mhz_tvalid(m_axis_tvalid),
-	.m_axis_cmac_tx_sim_tuser_err(m_axis_tuser),
-	.axis_adap_tx_250mhz_tready(m_axis_tready),
-	.axis_adap_tx_250mhz_tlast(m_axis_tlast),
+	.m_axis_cmac_tx_sim_tlast(m_axis_tlast),
 	
 	.s_axil_sim_awvalid(axil_awvalid),
 	.s_axil_sim_awaddr(axil_awaddr),

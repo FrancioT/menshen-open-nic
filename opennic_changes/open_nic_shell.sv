@@ -95,6 +95,11 @@ module open_nic_shell #(
   input      [NUM_CMAC_PORT-1:0] qsfp_refclk_n
 
 `else // !`ifdef __synthesis__
+  output    [NUM_QDMA-1:0] axis_aclk,
+  output    [NUM_QDMA-1:0] axil_aclk,
+  output    [31:0] shell_rst_done,
+  output    [31:0] user_rst_done,
+  
   input     [16*NUM_QDMA-1:0] pcie_rxp,
   input     [16*NUM_QDMA-1:0] pcie_rxn,
   output    [16*NUM_QDMA-1:0] pcie_txp,
@@ -413,7 +418,6 @@ module open_nic_shell #(
   wire     [NUM_CMAC_PORT-1:0] axis_cmac_rx_tuser_err;
 
   wire                  [31:0] shell_rstn;
-  wire                  [31:0] shell_rst_done;
   wire          [NUM_QDMA-1:0] qdma_rstn;
   wire          [NUM_QDMA-1:0] qdma_rst_done;
   wire     [NUM_CMAC_PORT-1:0] adap_rstn;
@@ -422,7 +426,6 @@ module open_nic_shell #(
   wire     [NUM_CMAC_PORT-1:0] cmac_rst_done;
 
   wire                  [31:0] user_rstn;
-  wire                  [31:0] user_rst_done;
   wire                  [15:0] user_250mhz_rstn;
   wire                  [15:0] user_250mhz_rst_done;
   wire                   [7:0] user_322mhz_rstn;
@@ -431,9 +434,6 @@ module open_nic_shell #(
   wire                         box_250mhz_rst_done;
   wire                         box_322mhz_rstn;
   wire                         box_322mhz_rst_done;
-
-  wire          [NUM_QDMA-1:0] axil_aclk;
-  wire          [NUM_QDMA-1:0] axis_aclk;
 
 `ifdef __au55n__
   wire                         ref_clk_100mhz;
