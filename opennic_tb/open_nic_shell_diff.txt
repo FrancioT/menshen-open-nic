@@ -1,5 +1,12 @@
-97a98,99
->   output          [NUM_QDMA-1:0] axis_aclk,
+97a98,104
+>   output    [NUM_QDMA-1:0] axis_aclk,
+>   output    [31:0] shell_rst_done,
+>   input     [16*NUM_QDMA-1:0] pcie_rxp,
+>   input     [16*NUM_QDMA-1:0] pcie_rxn,
+>   output    [16*NUM_QDMA-1:0] pcie_txp,
+>   output    [16*NUM_QDMA-1:0] pcie_txn,
 >   
-431d432
+411d417
+<   wire                  [31:0] shell_rst_done;
+431d436
 <   wire          [NUM_QDMA-1:0] axis_aclk;

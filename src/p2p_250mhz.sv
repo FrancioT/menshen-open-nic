@@ -280,8 +280,8 @@ module p2p_250mhz #(
         .aresetn       (axil_aresetn)
       );*/
       rmt_wrapper #() tx_ppl_inst (
-        .clk(clk),		// axis clk
-        .aresetn(aresetn),	
+        .clk(axis_aclk),		// axis clk
+        .aresetn(axil_aresetn),	
 
         // input Slave AXI Stream
         .s_axis_tdata(s_axis_qdma_h2c_tdata[`getvec(512, i)]),
