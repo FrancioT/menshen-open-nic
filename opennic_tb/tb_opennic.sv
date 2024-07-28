@@ -350,7 +350,7 @@ localparam logic [512-1:0] TARGET_VALUE_ADD = 512'h00000000050000000200000003000
 
 
 // LOGIC TO CHECK IF THE SUB TARGET VALUE IS DETECTED
-always_ff @(negedge clk) begin
+always_ff @(edge clk) begin
     if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE_SUB) begin
         value_detected_sub <= 1;
     end
@@ -360,7 +360,7 @@ always_ff @(negedge clk) begin
 end
 
 // LOGIC TO CHECK IF THE ADD TARGET VALUE IS DETECTED
-always_ff @(negedge clk) begin
+always_ff @(edge clk) begin
     if (finished_config && m_axis_tvalid && m_axis_tdata == TARGET_VALUE_ADD) begin
         value_detected_add <= 1;
     end

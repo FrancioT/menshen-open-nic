@@ -456,3 +456,10 @@ add_files -norecurse ${plugin_dir}/p2p/box_250mhz/user_plugin_250mhz_inst.vh ${p
 update_compile_order -fileset sources_1
 
 set_property is_global_include true [get_files  ${src_dir}/open_nic_shell_macros.vh]
+
+#set_property SOURCE_SET sources_1 [get_filesets sim_1]
+#add_files -fileset sim_1 -norecurse [PATH]/bd_7485_lmb_bram_0.mem [PATH]/bd_7485_reg_map_bram_0.mem
+#add_files -fileset sim_1 -norecurse /home/francio/Desktop/Tesi/opennic_build/clean_build/tb_opennic.sv
+#set_property top tb_opennic [get_filesets sim_1]
+#set_property top_lib xil_defaultlib [get_filesets sim_1]
+#update_compile_order -fileset sim_1
