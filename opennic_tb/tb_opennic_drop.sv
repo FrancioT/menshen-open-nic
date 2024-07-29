@@ -25,8 +25,6 @@ wire                        m_axis_tvalid;
 reg                         m_axis_tready;
 wire                        m_axis_tlast;
 reg                         finished_config;
-reg                         value_detected_add;
-reg                         value_detected_sub;
 reg                         tuser_error;
 reg                         tuser_zero_byte;
 reg [10:0]                  tuser_qid;
