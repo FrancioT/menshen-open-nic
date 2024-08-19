@@ -1,5 +1,5 @@
 ############# Menshen TCL
-set apath /work1TB/ftranquillo_work/menshen-open-nic-main/menshen
+set apath {{VAR}}/menshen
 
 source ${apath}/tcl/fifo.tcl
 
@@ -97,4 +97,4 @@ read_verilog "${apath}/lookup/lookup_engine_top.v"
 read_verilog "${apath}/lookup/lke_cam_part.v"
 read_verilog "${apath}/lookup/lke_ram_part.v"
 
-################## END OF MESHEN TCL
+################## END OF MENSHEN TCL

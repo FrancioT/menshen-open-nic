@@ -21,5 +21,10 @@ patch open-nic-shell/script/build.tcl < open-nic-shell-patches/build.patch
 patch open-nic-shell/src/open_nic_shell.sv < open-nic-shell-patches/open_nic_shell.patch
 patch open-nic-shell/src/open_nic_shell_macros.vh < open-nic-shell-patches/open_nic_shell_macros.patch
 realpath open-nic-tbs
+# ABS PATH PATCHES
 VAR=$(realpath open-nic-tbs)
 sed -i "" "s|{{VAR}}|${VAR}|g" "open-nic-shell/script/build.tcl"
+VAR=$(realpath)
+sed -i "" "s|{{VAR}}|${VAR}|g" "menshen/tcl/opennic_integration.tcl"
+
+echo "successful project gen"
