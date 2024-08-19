@@ -22,9 +22,28 @@ patch open-nic-shell/src/open_nic_shell.sv < open-nic-shell-patches/open_nic_she
 patch open-nic-shell/src/open_nic_shell_macros.vh < open-nic-shell-patches/open_nic_shell_macros.patch
 realpath open-nic-tbs
 # ABS PATH PATCHES
-VAR=$(realpath open-nic-tbs)
-sed -i "" "s|{{VAR}}|${VAR}|g" "open-nic-shell/script/build.tcl"
-VAR=$(realpath .)
-sed -i "" "s|{{VAR}}|${VAR}|g" "menshen/tcl/opennic_integration.tcl"
+OS_TYPE=$(uname)
+case "$OS_TYPE" in
+    Linux*)
+        echo "Running on Linux"
+        VAR=$(realpath open-nic-tbs)
+		sed -i "s|{{VAR}}|${VAR}|g" "open-nic-shell/script/build.tcl"
+		VAR=$(realpath .)
+		sed -i "s|{{VAR}}|${VAR}|g" "menshen/tcl/opennic_integration.tcl"
+        ;;
+
+    Darwin*)
+        echo "Running on macOS"
+        VAR=$(realpath open-nic-tbs)
+		sed -i "" "s|{{VAR}}|${VAR}|g" "open-nic-shell/script/build.tcl"
+		VAR=$(realpath .)
+		sed -i "" "s|{{VAR}}|${VAR}|g" "menshen/tcl/opennic_integration.tcl"
+        ;;
+
+    *)
+        echo "Unknown operating system: $OS_TYPE"
+        exit 1
+        ;;
+esac
 
 echo "successful project gen"
