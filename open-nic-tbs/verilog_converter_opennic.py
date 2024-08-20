@@ -98,6 +98,8 @@ crc_calc = Calculator(Crc32.CRC32)
 
 # CONFIGURATION PACKETS
 output_to_file("p4_generated/conf1.txt")
+#output_to_file("p4_generated/conf2.txt")
+#output_to_file("p4_generated/conf3.txt")
 #output_to_file("p4_generated/confsys.txt")
 output_to_file("p4_generated/stateconf.txt")
 
