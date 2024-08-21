@@ -1033,6 +1033,8 @@ initial begin
         @(posedge clk);
     
     s_axis_tdata <= 512'h000000000000000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000802000081050403020100090000000000;
+    // Commented normal packet (check the not dropped case and the failed test)
+    //s_axis_tdata <= 512'h0000000028000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000803000081050403020100090000000000;	
     s_axis_tuser_mty <= 6'b000000;
     s_axis_tvalid <= 1'b1;
     s_axis_tlast <= 1'b1;
@@ -1042,17 +1044,22 @@ initial begin
     repeat(4)
         @(posedge clk);
     finished_config <= 1'b1;
-    repeat(100)
+    repeat(1000) begin
         @(posedge clk);
-    
+        if(m_axis_tvalid) begin
+            $display("DROP TEST FAILED");
+            $finish(-1);
+        end
+    end
+    $display("DROP TEST PASSED");
     $finish(0);
 end
 
-property no_output_sim;
-    @(posedge clk) finished_config |-> !m_axis_tvalid;
-endproperty
+//property no_output_sim;
+//    @(posedge clk) finished_config |-> !m_axis_tvalid;
+//endproperty
 
-assert property (no_output_sim) else $fatal("The module tries to write an output, it should discard everything!");
+//assert property (no_output_sim) else $fatal("DROP TEST FAILED: The module tries to write an output, it should discard everything!");
 
 
 open_nic_shell #()
@@ -1104,3 +1111,4 @@ open_nic_shell_ins
 );
 
 endmodule
+
