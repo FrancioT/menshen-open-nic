@@ -16,7 +16,7 @@ menshen-open-nic/
 └── open-nic-integration.tcl    # TCL build file to include Menshen inside OpenNIC's 250MHz box
 ```
 ## Building
-The build process consist on running a script, that will clone the OpenNIC and Menshen repositories and patch the files necessary for building and testing the component on the OpenNIC platform.
+The build process consists on running a script that will clone the OpenNIC and Menshen repositories and patch the files necessary for building and testing the component on the OpenNIC platform.
 1. Clone the repo and enter the folder you just cloned
    ```sh
    git clone https://github.com/AlessandroVacca/menshen-open-nic.git && cd menshen-open-nic
@@ -29,7 +29,7 @@ The build process consist on running a script, that will clone the OpenNIC and M
    ```sh
    ./menshen-open-nic.sh
    ```
-5. In order to include the component inside OpenNIC you will need to build with this command, using Vivado 2022.2
+5. In order to include the component inside OpenNIC you will need to build with this command, using Vivado 2022.1
    ```sh
    cd path/to/menshen-open-nic/open-nic-shell/script
    vivado -mode tcl -source build.tcl -tclargs -board au55c -user_plugin ../../src
