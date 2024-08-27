@@ -57,7 +57,7 @@ def pad_left_string_zeros(old_string, factor):
 
 def output_to_file(file_name):
 	parsed_file = parse_configuration(file_name)
-	print("// "+file_name.split("/")[-1] + ":")
+	#print("// "+file_name.split("/")[-1] + ":")
 	for chunk in parsed_file:
 		original_val = bytearray(hexlify(bytes(chunk)))
 		#print(str(original_val)[12:-2])
@@ -74,26 +74,17 @@ def output_to_file(file_name):
 		
 		for_range = len(data_signal)//128
 		for i in range(0, for_range):
-			print("    s_axis_tdata <= 512\'h"+data_signal[-i*128-128:len(data_signal)-i*128]+";")
-			print("    s_axis_tvalid <= 1\'b1;")
+			print(data_signal[-i*128-128:len(data_signal)-i*128])
 			if i!=for_range-1:
-				print("    s_axis_tuser_mty <= 6'b000000;")
-				print("    s_axis_tlast <= 1\'b0;")
-				print("    @(posedge clk);")
+				print("000000")
 			else:
-				print("    s_axis_tuser_mty <= 6'b"+format(64-((len(changed)//2)%64), "08b")+";")
-				print("    s_axis_tlast <= 1\'b1;")
-				print("    @(posedge clk);")
-				print("    s_axis_tvalid <= 1\'b0;")
-				print("    s_axis_tlast <= 1\'b0;")
-				print("    s_axis_tcrc <= 32\'b"+format(crc_calc.checksum(bytes(chunk)), "032b")+";")
-				print("    repeat(30)\n        @(posedge clk);")
-	print("\n")
+				print(format(64-((len(changed)//2)%64), "06b"))
+				print(format(crc_calc.checksum(bytes(chunk)), "032b")+"\n")
 
 
 
 
-sys.stdout = open("vivado_format.txt",'w')
+sys.stdout = open("conf_packets.txt",'w')
 crc_calc = Calculator(Crc32.CRC32)
 
 # CONFIGURATION PACKETS
