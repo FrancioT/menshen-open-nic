@@ -1,7 +1,9 @@
 
 `timescale 1ns / 1ps
 
-module tb_opennic_stages #()();
+module tb_opennic_stages #(
+parameter DATA_WIDTH=512
+)();
 
 wire                        clk;
 wire                        axil_clk;
@@ -10,7 +12,7 @@ wire [31:0]                 shell_rst_done;
 wire [31:0]                 user_rst_done;
 wire                        rst_done;
 
-reg [511:0]                 s_axis_tdata;
+reg [DATA_WIDTH-1:0]        s_axis_tdata;
 reg [5:0]                   s_axis_tuser_mty;
 reg [31:0]                  s_axis_tuser;
 reg                         s_axis_tvalid;
@@ -18,8 +20,8 @@ wire                        s_axis_tready;
 reg                         s_axis_tlast;
 reg [31:0]                  s_axis_tcrc;
 
-wire [511:0]                m_axis_tdata;
-wire [((512/8))-1:0]        m_axis_tkeep;
+wire [DATA_WIDTH-1:0]       m_axis_tdata;
+wire [((DATA_WIDTH/8))-1:0] m_axis_tkeep;
 wire                        m_axis_tuser;
 wire                        m_axis_tvalid;
 reg                         m_axis_tready;
@@ -49,7 +51,6 @@ reg                         axil_rready;
 assign rst_done = (&shell_rst_done) & (&user_rst_done);
 
 initial begin
-    int fd;
     tuser_error = 0;
     tuser_zero_byte = 0;
     tuser_port_id = 0;
@@ -74,24 +75,37 @@ initial begin
     repeat(40)
         @(posedge clk);
     
-    // set register for qdma with axi4 lite     
-    axil_awvalid <= 1'b1;
-    axil_awaddr <= 32'h00001000;
-    axil_wvalid <= 1'b1;
-    axil_wdata <= 32'h00000001;
-    axil_bready <= 1'b1;
-    @(axil_awready == 1'b1);
-    @(posedge axil_clk);
-    axil_awvalid <= 1'b0;
-    @(axil_wready == 1'b1);
-    @(posedge axil_clk);
-    axil_wvalid <= 1'b0;
-    axil_awaddr <= 32'h00000000;
-    axil_wdata <= 32'h00000000;
-    axil_bready <= 1'b0;
-    @(axil_bvalid == 1'b1);
+    
+    register_setup(32'h00001000, 32'h00000001);    
+    configuration();
     
     
+    // test packet
+    // padding: 00000000 bit
+    // res    : 82000000 = 40 	
+    // op_a   : a0000000 = 10
+    // op_b   : 50000000 = 5
+    // op     : 1a00 = - / 0d00 = +
+    //s_axis_tdata <= 512'h0000000026000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;	
+    s_axis_tdata <= 512'h0000000028000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;	
+    s_axis_tuser_mty <= 6'b000000;
+    s_axis_tvalid <= 1'b1;
+    s_axis_tlast <= 1'b1;
+    @(posedge clk);
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    
+    // Check result
+	@(m_axis_tvalid == 1'b1)
+	assert (m_axis_tdata[479:472] == 8'h50) $display ("TEST PASSED");
+	$finish;
+end
+
+
+// Tasks:
+task configuration;
+int fd;
+begin
     repeat(40)
         @(posedge clk);
     s_axis_tcrc <= 32'b0;
@@ -124,28 +138,29 @@ initial begin
         end
     end
     $fclose(fd);
-    
-    
-    // test packet
-    // padding: 00000000 bit
-    // res    : 82000000 = 40 	
-    // op_a   : a0000000 = 10
-    // op_b   : 50000000 = 5
-    // op     : 1a00 = - / 0d00 = +
-    //s_axis_tdata <= 512'h0000000026000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;	
-    s_axis_tdata <= 512'h0000000028000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;	
-    s_axis_tuser_mty <= 6'b000000;
-    s_axis_tvalid <= 1'b1;
-    s_axis_tlast <= 1'b1;
-    @(posedge clk);
-    s_axis_tvalid <= 1'b0;
-    s_axis_tlast <= 1'b0;
-    
-    // Check result
-	@(m_axis_tvalid == 1'b1)
-	assert (m_axis_tdata[479:472] == 8'h50) $display ("TEST PASSED");
-	$finish;
 end
+endtask
+
+task register_setup(input [31:0] reg_addr, reg_val);
+begin
+    // set register for qdma with axi4 lite     
+    axil_awvalid <= 1'b1;
+    axil_awaddr <= reg_addr;
+    axil_wvalid <= 1'b1;
+    axil_wdata <= reg_val;
+    axil_bready <= 1'b1;
+    @(axil_awready == 1'b1);
+    @(posedge axil_clk);
+    axil_awvalid <= 1'b0;
+    @(axil_wready == 1'b1);
+    @(posedge axil_clk);
+    axil_wvalid <= 1'b0;
+    axil_awaddr <= 32'h00000000;
+    axil_wdata <= 32'h00000000;
+    axil_bready <= 1'b0;
+    @(axil_bvalid == 1'b1);
+end
+endtask
 
 open_nic_shell #()
 open_nic_shell_ins

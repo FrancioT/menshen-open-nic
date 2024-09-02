@@ -254,10 +254,10 @@ end
 //endsequence
 
 property no_output_sim;
-    @(posedge clk) finished_config |-> !m_axis_tvalid;
+    @(posedge m_axis_tvalid) !finished_config;
 endproperty
 
-assert property (no_output_sim) else $fatal("The module tries to write an output, it should discard everything!");
+always @(posedge clk) assert property (no_output_sim) else $fatal("The module tries to write an output, it should discard everything!");
 
 rmt_wrapper #(
 	.C_S_AXI_DATA_WIDTH(),

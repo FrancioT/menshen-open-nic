@@ -1,7 +1,9 @@
 
 `timescale 1ns / 1ps
 
-module tb_opennic_modules #()();
+module tb_opennic_modules #(
+parameter DATA_WIDTH=512
+)();
 
 wire                        clk;
 wire                        axil_clk;
@@ -10,7 +12,7 @@ wire [31:0]                 shell_rst_done;
 wire [31:0]                 user_rst_done;
 wire                        rst_done;
 
-reg [511:0]                 s_axis_tdata;
+reg [DATA_WIDTH-1:0]                 s_axis_tdata;
 reg [5:0]                   s_axis_tuser_mty;
 reg [31:0]                  s_axis_tuser;
 reg                         s_axis_tvalid;
@@ -18,8 +20,8 @@ wire                        s_axis_tready;
 reg                         s_axis_tlast;
 reg [31:0]                  s_axis_tcrc;
 
-wire [511:0]                m_axis_tdata;
-wire [((512/8))-1:0]        m_axis_tkeep;
+wire [DATA_WIDTH-1:0]                m_axis_tdata;
+wire [((DATA_WIDTH/8))-1:0]        m_axis_tkeep;
 wire                        m_axis_tuser;
 wire                        m_axis_tvalid;
 reg                         m_axis_tready;
@@ -55,15 +57,14 @@ assign rst_done = (&shell_rst_done) & (&user_rst_done);
 // Output validation
 // Define the target value you are looking for
 // SUB EXPECTED OUTPUT
-localparam logic [512-1:0] TARGET_VALUE_SUB = 512'h000000000100000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+localparam logic [DATA_WIDTH-1:0] TARGET_VALUE_SUB = 512'h000000000100000002000000030000001a004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
 // ADD EXPECTED OUTPUT
-localparam logic [512-1:0] TARGET_VALUE_ADD = 512'h000000000500000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
+localparam logic [DATA_WIDTH-1:0] TARGET_VALUE_ADD = 512'h000000000500000002000000030000000d00594d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000801000081050403020100090000000000;
 // TB_STAGES EXPECTED OUTPUT
-localparam logic [512-1:0] TARGET_VALUE_STAGES = 512'h0000000050000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000803000081050403020100090000000000;
+localparam logic [DATA_WIDTH-1:0] TARGET_VALUE_STAGES = 512'h0000000050000000050000000a0000000d004c4d1a00e110d204dededede6f6f6f6f22de1140000001002e000045000803000081050403020100090000000000;
 
 
 initial begin
-    int fd;
     finished_config = 0;
     tuser_error = 0;
     tuser_zero_byte = 0;
@@ -89,56 +90,9 @@ initial begin
     repeat(40)
         @(posedge clk);
     
-    // set register for qdma with axi4 lite     
-    axil_awvalid <= 1'b1;
-    axil_awaddr <= 32'h00001000;
-    axil_wvalid <= 1'b1;
-    axil_wdata <= 32'h00000001;
-    axil_bready <= 1'b1;
-    @(axil_awready == 1'b1);
-    @(posedge axil_clk);
-    axil_awvalid <= 1'b0;
-    @(axil_wready == 1'b1);
-    @(posedge axil_clk);
-    axil_wvalid <= 1'b0;
-    axil_awaddr <= 32'h00000000;
-    axil_wdata <= 32'h00000000;
-    axil_bready <= 1'b0;
-    @(axil_bvalid == 1'b1);
     
-    
-    repeat(40)
-        @(posedge clk);
-    s_axis_tcrc <= 32'b0;
-    m_axis_tready <= 1'b1;
-    s_axis_tuser <= 32'h0000004A;
-    s_axis_tvalid <= 1'b0;
-    s_axis_tlast <= 1'b0;
-    repeat(3)
-        @(posedge clk);
-    
-    fd = $fopen("modules_conf.txt", "r");
-    while(!$feof(fd))
-    begin
-        $fscanf(fd, "%h\n%b\n", s_axis_tdata, s_axis_tuser_mty);
-        s_axis_tvalid <= 1'b1;
-        if(s_axis_tuser_mty != 6'b000000)
-        begin
-            s_axis_tlast <= 1'b1;
-            $fscanf(fd, "%b\n\n", s_axis_tcrc);
-            @(posedge clk);
-            s_axis_tvalid <= 1'b0;
-            s_axis_tlast <= 1'b0;
-            repeat(30)
-                @(posedge clk);
-        end
-        else
-        begin
-            s_axis_tlast <= 1'b0;
-            @(posedge clk);
-        end
-    end
-    $fclose(fd);
+    register_setup(32'h00001000, 32'h00000001);    
+    configuration();
     
     
     // TEST SUB    
@@ -220,6 +174,67 @@ initial begin
     $display("DROP TEST PASSED");
     $finish(0);
 end
+
+
+// Tasks:
+task configuration;
+int fd;
+begin
+    repeat(40)
+        @(posedge clk);
+    s_axis_tcrc <= 32'b0;
+    m_axis_tready <= 1'b1;
+    s_axis_tuser <= 32'h0000004A;
+    s_axis_tvalid <= 1'b0;
+    s_axis_tlast <= 1'b0;
+    repeat(3)
+        @(posedge clk);
+    
+    fd = $fopen("modules_conf.txt", "r");
+    while(!$feof(fd))
+    begin
+        $fscanf(fd, "%h\n%b\n", s_axis_tdata, s_axis_tuser_mty);
+        s_axis_tvalid <= 1'b1;
+        if(s_axis_tuser_mty != 6'b000000)
+        begin
+            s_axis_tlast <= 1'b1;
+            $fscanf(fd, "%b\n\n", s_axis_tcrc);
+            @(posedge clk);
+            s_axis_tvalid <= 1'b0;
+            s_axis_tlast <= 1'b0;
+            repeat(30)
+                @(posedge clk);
+        end
+        else
+        begin
+            s_axis_tlast <= 1'b0;
+            @(posedge clk);
+        end
+    end
+    $fclose(fd);
+end
+endtask
+
+task register_setup(input [31:0] reg_addr, reg_val);
+begin
+    // set register for qdma with axi4 lite     
+    axil_awvalid <= 1'b1;
+    axil_awaddr <= reg_addr;
+    axil_wvalid <= 1'b1;
+    axil_wdata <= reg_val;
+    axil_bready <= 1'b1;
+    @(axil_awready == 1'b1);
+    @(posedge axil_clk);
+    axil_awvalid <= 1'b0;
+    @(axil_wready == 1'b1);
+    @(posedge axil_clk);
+    axil_wvalid <= 1'b0;
+    axil_awaddr <= 32'h00000000;
+    axil_wdata <= 32'h00000000;
+    axil_bready <= 1'b0;
+    @(axil_bvalid == 1'b1);
+end
+endtask
 
 //property no_output_sim;
 //    @(posedge clk) finished_config |-> !m_axis_tvalid;
