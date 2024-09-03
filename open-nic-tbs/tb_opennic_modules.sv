@@ -27,8 +27,6 @@ wire                        m_axis_tvalid;
 reg                         m_axis_tready;
 wire                        m_axis_tlast;
 reg                         finished_config;
-reg                         value_detected_add;
-reg                         value_detected_sub;
 reg                         tuser_error;
 reg                         tuser_zero_byte;
 reg [10:0]                  tuser_qid;
@@ -103,9 +101,7 @@ initial begin
     @(posedge clk);
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    @(m_axis_tvalid == 1'b1)
-    //#(CYCLE/2)
-    @(posedge clk);
+    @(posedge m_axis_tvalid);
 	if (m_axis_tdata == TARGET_VALUE_SUB) begin 
         $display ("SUB TEST PASSED"); 
     end else begin
@@ -121,9 +117,7 @@ initial begin
     @(posedge clk);
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    @(m_axis_tvalid == 1'b1)
-    //#(CYCLE/2)
-    @(posedge clk);
+    @(posedge m_axis_tvalid);
 	if (m_axis_tdata == TARGET_VALUE_ADD) begin 
         $display ("ADD TEST PASSED"); 
     end else begin
@@ -139,9 +133,7 @@ initial begin
     @(posedge clk);
     s_axis_tvalid <= 1'b0;
     s_axis_tlast <= 1'b0;
-    @(m_axis_tvalid == 1'b1)
-    //#(CYCLE/2)
-    @(posedge clk);
+    @(posedge m_axis_tvalid);
 	if (m_axis_tdata == TARGET_VALUE_STAGES) begin 
         $display ("STAGES TEST PASSED"); 
     end else begin
