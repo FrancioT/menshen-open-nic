@@ -1,7 +1,7 @@
 # Menshen port on the OpenNIC platform
 This projects consists on the port of [Menshen](https://github.com/multitenancy-project/menshen), an hardware library for an High-Speed Programmable Packet-Processing Pipeline, on AMD's [OpenNIC](https://github.com/Xilinx/open-nic-shell) platform, which is an open-source FPGA-based NIC.
 
-You can read Menshen's paper and learn about the project [here](isolation.quest).
+You can read Menshen's paper and learn about the project [here](https://www.usenix.org/system/files/nsdi22-paper-wang_tao.pdf).
 
 The porting consists in the development of an OpenNIC 250MHz user plugin box (see OpenNIC's architecture) that wraps Menshen's pipeline inside. The project also comes with the testbenches to verify that all of the pipeline features properly work.
 ## Directory structure
